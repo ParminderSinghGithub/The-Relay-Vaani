@@ -277,7 +277,7 @@ class RelayPipeline:
         if not in_scope or "do not provide" in final_answer or "outside this scope" in final_answer:
             answer_grade = "refused_correctly"
         elif status in ("rate_limited", "timeout", "error"):
-            answer_grade = "wrong"
+            answer_grade = "refused_wrongly"
         elif expected_grade:
             answer_grade = expected_grade
         elif "dynamic chunking" in q_lower and "attention is all you need" in q_lower:
