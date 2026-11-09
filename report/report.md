@@ -74,3 +74,4 @@ How your stand-in behaves, how you calibrated it from real measurements, and whe
 
 ## How I worked with the assistant
 <!-- Include your real conversation history with it, not a cleaned-up one, or the prompts if the tool cannot export. Then, in half a page, give the three prompts that mattered most and why, one thing it got wrong that you caught and how you caught it, and one decision where you overruled it. Say what in this submission is distinctly yours. -->
+

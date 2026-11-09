@@ -174,3 +174,4 @@ class GroqClient:
                 "tokens_in": 0,
                 "tokens_out": 0
             }
+
