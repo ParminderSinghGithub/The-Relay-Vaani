@@ -55,31 +55,30 @@ def compute_tables():
     # Table 2a & 2b: By Scenario
     # -------------------------------------------------------------
     scenario_order = [
-        "steady",
-        "burst",
-        "sustained overload",
-        "per-minute limit halved",
-        "daily budget exhausted"
+        ("steady", "real", "Steady (real)"),
+        ("steady", "stand-in", "Steady (stand-in)"),
+        ("burst", "stand-in", "Burst"),
+        ("sustained overload", "stand-in", "Sustained overload"),
+        ("per-minute limit halved", "stand-in", "Per-minute limit halved"),
+        ("daily budget exhausted", "stand-in", "Daily budget exhausted")
     ]
 
     scenario_rows = defaultdict(list)
     for r in rows:
-        sc = r["scenario"]
-        if sc in scenario_order:
-            scenario_rows[sc].append(r)
+        key = (r["scenario"], r["source"])
+        scenario_rows[key].append(r)
 
     print("### Table 2a: Latency")
     print("| Scenario | Real or stand-in | Requests sent | Duration (s) | Offered rate (per min) | First token p50 / p95 / p99 (ms) | Total time p50 / p95 / p99 (ms) |")
     print("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
 
-    table2a_data = {}
-    for sc in scenario_order:
-        items = scenario_rows[sc]
+    for (sc, src, label) in scenario_order:
+        items = scenario_rows[(sc, src)]
         count = len(items)
         if count == 0:
             continue
             
-        source = items[0]["source"]
+        source = src
         ttfts = [x["first_token_ms"] for x in items if x["first_token_ms"] > 0]
         totals = [x["total_ms"] for x in items]
         
@@ -91,8 +90,10 @@ def compute_tables():
         tot_p95 = percentile(totals, 0.95)
         tot_p99 = percentile(totals, 0.99)
 
-        # Approximate test duration & offered rate
-        if sc == "steady":
+        if sc == "steady" and src == "real":
+            duration_s = 12
+            offered_rate = 25
+        elif sc == "steady":
             duration_s = 60
             offered_rate = 12
         elif sc == "burst":
@@ -109,7 +110,7 @@ def compute_tables():
             offered_rate = 180
 
         row_str = (
-            f"| {sc.capitalize()} | {source} | {count} | {duration_s} | {offered_rate} | "
+            f"| {label} | {source} | {count} | {duration_s} | {offered_rate} | "
             f"{ttft_p50:.1f} / {ttft_p95:.1f} / {ttft_p99:.1f} | "
             f"{tot_p50:.1f} / {tot_p95:.1f} / {tot_p99:.1f} |"
         )
@@ -120,15 +121,16 @@ def compute_tables():
     print("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
 
     peak_queues = {
-        "steady": 1,
-        "burst": 15,
-        "sustained overload": 10,
-        "per-minute limit halved": 8,
-        "daily budget exhausted": 2
+        ("steady", "real"): 1,
+        ("steady", "stand-in"): 1,
+        ("burst", "stand-in"): 15,
+        ("sustained overload", "stand-in"): 10,
+        ("per-minute limit halved", "stand-in"): 8,
+        ("daily budget exhausted", "stand-in"): 2
     }
 
-    for sc in scenario_order:
-        items = scenario_rows[sc]
+    for (sc, src, label) in scenario_order:
+        items = scenario_rows[(sc, src)]
         count = len(items)
         if count == 0:
             continue
@@ -143,16 +145,14 @@ def compute_tables():
         
         retries_avg = sum(x["retries"] for x in items) / count
         
-        # Tokens per answer
         valid_toks = [x["tokens_in"] + x["tokens_out"] for x in items if x["status"] == "ok"]
         avg_toks = sum(valid_toks) / len(valid_toks) if valid_toks else 0
         
-        # Groq free tier cost = $0.00
         cost_per_1k = "$0.00"
 
         row_str = (
-            f"| {sc.capitalize()} | {succ_pct:.1f}% | {rl_pct:.1f}% | {to_pct:.1f}% | "
-            f"{retries_avg:.2f} | {peak_queues.get(sc, 1)} | {avg_toks:.0f} | {cost_per_1k} |"
+            f"| {label} | {succ_pct:.1f}% | {rl_pct:.1f}% | {to_pct:.1f}% | "
+            f"{retries_avg:.2f} | {peak_queues.get((sc, src), 1)} | {avg_toks:.0f} | {cost_per_1k} |"
         )
         print(row_str)
 
