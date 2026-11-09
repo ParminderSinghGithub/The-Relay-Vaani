@@ -254,13 +254,11 @@ class RelayPipeline:
             elif status in ("rate_limited", "timeout", "error"):
                 if attempt < self.max_retries:
                     retries += 1
-                    backoff = min(
-                        self.max_backoff_sec,
-                        self.base_backoff_sec * (2 ** attempt) + random.uniform(0.01, 0.05)
-                    )
+                    backoff = self.base_backoff_sec * (2 ** attempt) + random.uniform(0.01, 0.05)
                     retry_header = res.get("headers", {}).get("retry-after")
                     if retry_header and retry_header.isdigit():
                         backoff = max(backoff, float(retry_header))
+                    backoff = min(self.max_backoff_sec, backoff)
                         
                     total_retrying_ms += (time.perf_counter() - t_attempt_start) * 1000.0
                     total_waiting_ms += backoff * 1000.0
