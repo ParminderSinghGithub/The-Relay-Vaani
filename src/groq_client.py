@@ -123,10 +123,13 @@ class GroqClient:
                             data_json = json.loads(data_str)
                             delta = data_json["choices"][0].get("delta", {})
                             content_piece = delta.get("content", "")
-                            if content_piece:
+                            reasoning_piece = delta.get("reasoning", "")
+                            token_piece = content_piece or reasoning_piece
+                            
+                            if token_piece:
                                 if first_token_time is None:
                                     first_token_time = time.perf_counter()
-                                collected_chunks.append(content_piece)
+                                collected_chunks.append(content_piece if content_piece else reasoning_piece)
                         except Exception:
                             continue
 
