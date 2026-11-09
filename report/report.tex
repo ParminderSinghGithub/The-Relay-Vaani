@@ -1,5 +1,5 @@
 \documentclass[9pt,a4paper]{article}
-\usepackage[margin=0.45in,top=0.4in,bottom=0.4in]{geometry}
+\usepackage[a4paper,top=0.38in,bottom=0.38in,left=0.45in,right=0.45in]{geometry}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{microtype}
@@ -9,27 +9,33 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 
+\definecolor{navy}{RGB}{20, 50, 90}
+\definecolor{darkgray}{RGB}{50, 50, 50}
+
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
-    urlcolor=blue,
-    citecolor=blue
+    linkcolor=navy,
+    urlcolor=navy,
+    citecolor=navy
 }
 
-\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule]
-\titlespacing*{\section}{0pt}{4pt}{2pt}
-\setlist{nosep,leftmargin=1.1em}
-\renewcommand{\arraystretch}{0.92}
+\titleformat{\section}{\color{navy}\large\bfseries}{\thesection}{0.5em}{}[\vspace{-2pt}\titlerule]
+\titlespacing*{\section}{0pt}{3pt}{2pt}
+\titleformat{\subsection}{\color{darkgray}\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titlespacing*{\subsection}{0pt}{2pt}{1pt}
+
+\setlist{nosep,leftmargin=1.1em,topsep=1pt}
+\renewcommand{\arraystretch}{0.95}
 \setlength{\tabcolsep}{2.5pt}
 
 \begin{document}
 
 \begin{center}
-    {\LARGE \textbf{The Relay: Architectural Resiliency and Retrieval Report}}\\[2pt]
+    {\LARGE \textbf{\color{navy}The Relay: Architectural Resiliency and Retrieval Report}}\\[2pt]
     \textbf{Candidate Systems Engineering Submission} \quad | \quad Repository: \url{https://github.com/ParminderSinghGithub/vaani}
 \end{center}
 
-\vspace{-4pt}
+\vspace{-6pt}
 
 \section*{1 What I built and why}
 We designed and implemented a four-step resilient question-answering pipeline in Python querying a research library of three arXiv preprints: \textit{Attention Is All You Need} (1706.03762v7), \textit{Moshi: a speech-text foundation model for real-time dialogue} (2410.00037v1), and \textit{Dynamic Chunking for End-to-End Hierarchical Sequence Modeling} (2507.07955v2).
@@ -47,14 +53,14 @@ We probed Groq's hosted API under a free-tier organization account using model \
 \subsection*{Table 1: Limits you found in the real service}
 \noindent\begin{tabularx}{\textwidth}{l X X l}
 \toprule
-\textbf{Limit} & \textbf{Value you found} & \textbf{How you found it} & \textbf{Confidence} \\
+\textbf{Limit} & \textbf{Value you found} & \textbf{How you found it} & \textbf{Confidence (high, medium, low)} \\
 \midrule
 Requests per minute & 30 RPM & Groq console account limits table & High \\
 Tokens per minute & 8,000 TPM & Measured from response header \texttt{x-ratelimit-limit-tokens: 8000} & High \\
 Requests per day & 1,000 RPD & Measured from response header \texttt{x-ratelimit-limit-requests: 1000} & High \\
 Tokens per day & 200,000 TPD & Groq console account limits table & High \\
 Requests in flight at once & 1--3 concurrent & Empirical observation during paced baseline requests & Medium \\
-What it returns when limit hit & HTTP 429 Too Many Requests with JSON error payload and \texttt{retry-after} & Official Groq error specification and API telemetry documentation & High \\
+What it returns when a limit is hit & HTTP 429 Too Many Requests with JSON error payload and \texttt{retry-after} & Official Groq error specification and API telemetry documentation & High \\
 Time until it recovers & $\approx 1.9\text{s}$ to $60\text{s}$ for TPM/RPM; resets at 00:00 UTC for RPD & Live response reset headers (\texttt{x-ratelimit-reset-tokens: 1.897s}) & High \\
 \bottomrule
 \end{tabularx}
@@ -65,10 +71,10 @@ Time until it recovers & $\approx 1.9\text{s}$ to $60\text{s}$ for TPM/RPM; rese
 
 \section*{3 Results}
 
-\subsection*{Table 2a: Latency}
+\subsection*{Table 2a: Latency, one row per load scenario (at least: steady, burst, sustained overload, per-minute limit halved, daily budget exhausted)}
 \noindent\begin{tabularx}{\textwidth}{l l r r r r r}
 \toprule
-\textbf{Scenario} & \textbf{Source} & \textbf{Requests} & \textbf{Duration (s)} & \textbf{Offered rate (/min)} & \textbf{First token p50 / p95 / p99 (ms)} & \textbf{Total time p50 / p95 / p99 (ms)} \\
+\textbf{Scenario} & \textbf{Real or stand-in} & \textbf{Requests sent} & \textbf{Duration (s)} & \textbf{Offered rate (per min)} & \textbf{First token p50 / p95 / p99 (ms)} & \textbf{Total time p50 / p95 / p99 (ms)} \\
 \midrule
 Steady (real) & real & 5 & 12 & 25 & 1868.9 / 18756.0 / 18756.0 & 2278.6 / 19103.1 / 19103.1 \\
 Steady (stand-in) & stand-in & 12 & 60 & 12 & 1728.8 / 1799.0 / 1799.0 & 2689.0 / 3004.0 / 3004.0 \\
@@ -78,11 +84,13 @@ Per-minute limit halved & stand-in & 20 & 30 & 40 & 1998.7 / 1998.7 / 1998.7 & 6
 Daily budget exhausted & stand-in & 15 & 5 & 180 & 0.0 / 0.0 / 0.0 & 0.0 / 0.0 / 0.0 \\
 \bottomrule
 \end{tabularx}
+\vspace{1pt}
+\noindent{\scriptsize\textit{Note: TTFT percentiles for Burst and Overload scenarios are computed over requests receiving tokens ($first\_token\_ms > 0$), while total latency percentiles include all offered requests.}}
 
-\subsection*{Table 2b: Outcomes}
+\subsection*{Table 2b: Outcomes, same rows}
 \noindent\begin{tabularx}{\textwidth}{l r r r r r r r}
 \toprule
-\textbf{Scenario} & \textbf{Succeeded \%} & \textbf{Rate-limited \%} & \textbf{Timed out \%} & \textbf{Retries/req} & \textbf{Peak queue} & \textbf{Tokens/ans} & \textbf{Cost/1k} \\
+\textbf{Scenario} & \textbf{Succeeded \%} & \textbf{Rate-limited \%} & \textbf{Timed out or given up \%} & \textbf{Retries per request} & \textbf{Peak queue length} & \textbf{Tokens per answer} & \textbf{Cost per 1,000 answers} \\
 \midrule
 Steady (real) & 100.0\% & 0.0\% & 0.0\% & 0.80 & 1 & 2236 & \$0.00 \\
 Steady (stand-in) & 100.0\% & 0.0\% & 0.0\% & 0.00 & 1 & 1803 & \$0.00 \\
@@ -92,9 +100,11 @@ Per-minute limit halved & 30.0\% & 70.0\% & 0.0\% & 1.40 & 8 & 670 & \$0.00 \\
 Daily budget exhausted & 0.0\% & 100.0\% & 0.0\% & 0.00 & 2 & 0 & \$0.00 \\
 \bottomrule
 \end{tabularx}
+\vspace{1pt}
+\noindent{\scriptsize\textit{Note: Tokens per answer represents total transaction tokens ($tokens\_in + tokens\_out$). Free-tier usage incurs \$0.00 API cost.}}
 
 \vspace{2pt}
-\noindent\textbf{Sample Size Qualification:} The live Steady run intentionally used a quota-safe sample of $N=5$ real requests to prevent premature quota exhaustion; its $p95/p99$ values reflect observed tail behavior within that sample rather than long-run population bounds. Cost per 1,000 answers is recorded as \$0.00 reflecting free-tier evaluation.\\
+\noindent\textbf{Sample Size Qualification:} The live Steady run intentionally used a quota-safe calibration of $N=5$ real requests to prevent premature quota exhaustion; its $p95/p99$ values reflect observed tail behavior within that sample rather than long-run population bounds.\\
 \textbf{A Number We Could Not Have Guessed Without Running It:}  
 \textbf{The 10x Tail Latency Spike on Real Groq.} In the live Steady probe, requests 1--3 arrived at steady TTFTs between $1,137.3\text{ ms}$ and $1,868.9\text{ ms}$. However, request 5 suffered a massive latency spike to \textbf{18,756.0 ms TTFT} and \textbf{19,103.1 ms Total Latency} on the live service. Because RAG prompts consumed $\approx 1,800$ tokens each, request 4 and 5 reached the 8,000 TPM limit at an offered rate of only 25/min (under the 30 RPM limit), triggering client backoff and multi-tenant batch delay. Across our 16 curated test questions, answer quality achieved \textbf{62.5\% cited correct answers, 37.5\% correctly refused answers, and 0.0\% wrong answers}, consuming an average of \textbf{999 to 1,466 tokens per answer}.
 
@@ -112,8 +122,8 @@ Examining live Groq request \texttt{req\_c94d601d} from \texttt{results.csv} dur
 
 \section*{5 When a limit is hit}
 \begin{itemize}
-    \item \textbf{At the Per-Minute Limit (RPM/TPM):} The pipeline throttles requests using exponential backoff with full random jitter ($t_{\text{backoff}} = \min(4.0, 1.0 \cdot 2^{\text{attempt}} + \text{jitter})$), honoring upstream \texttt{retry-after} headers. In-flight interactive queries are delayed rather than immediately aborted. If congestion persists past 2 retries, requests are dropped cleanly with status \texttt{rate\_limited}.
-    \item \textbf{At the Per-Day Limit (RPD/TPD):} All queueing and retrying is bypassed entirely. The pipeline fast-fails incoming requests at Step 1 with zero latency (0.0 ms), immediately notifying the user rather than leaving them in a futile queue.
+    \item \textbf{At the Per-Minute Limit (RPM/TPM):} The pipeline throttles requests using exponential backoff with full random jitter ($t_{\text{backoff}} = \min(4.0, 1.0 \cdot 2^{\text{attempt}} + \text{jitter})$), honoring upstream \texttt{retry-after} headers. In-flight interactive queries are delayed rather than immediately aborted. If congestion persists past 2 retries, requests are dropped cleanly with status \texttt{rate\_limited}. Across the 80 rate-limited outcomes in \texttt{results.csv}, 65 represent load-shed drops on valid queries (graded \texttt{refused\_wrongly} due to capacity exhaustion).
+    \item \textbf{At the Per-Day Limit (RPD/TPD):} All queueing and retrying is bypassed entirely. The pipeline fast-fails incoming requests at Step 1 with zero latency (0.0 ms), immediately notifying the user rather than leaving them in a futile queue. These 15 daily budget requests are graded \texttt{refused\_correctly}.
     \item \textbf{Who gets a weaker answer:} When available TPM drops below 2,500 tokens, retrieval clamps chunk retrieval from 4 pieces down to 1 piece ($k=1$), halving prompt token burn to preserve service availability.
 \end{itemize}
 
@@ -122,7 +132,7 @@ Examining live Groq request \texttt{req\_c94d601d} from \texttt{results.csv} dur
 \subsection*{Table 3: Retrieval settings (at least three)}
 \noindent\begin{tabularx}{\textwidth}{l r r r r r r r}
 \toprule
-\textbf{Setting (piece size, pieces fetched, re-rank)} & \textbf{Asked} & \textbf{Correct/cited \%} & \textbf{Wrong \%} & \textbf{Correctly refused \%} & \textbf{Tokens/ans} & \textbf{First token p50/p95 (ms)} & \textbf{Total time p50/p95 (ms)} \\
+\textbf{Setting (piece size, pieces fetched, re-rank yes or no)} & \textbf{Questions asked} & \textbf{Correct and cited \%} & \textbf{Wrong \%} & \textbf{Correctly refused \%} & \textbf{Tokens per answer} & \textbf{First token p50 / p95 (ms)} & \textbf{Total time p50 / p95 (ms)} \\
 \midrule
 Setting A (200t, 6 pieces, no re-rank) & 16 & 62.5\% & 0.0\% & 37.5\% & 1134 & 1689.2 / 1793.6 & 2555.0 / 2847.1 \\
 Setting B (500t, 4 pieces, re-rank yes) & 16 & 62.5\% & 0.0\% & 37.5\% & 1466 & 1638.5 / 1802.0 & 2555.3 / 2971.9 \\
@@ -187,11 +197,11 @@ The development was executed in structured, verified milestones:
 
 \subsection*{Three Prompts That Mattered Most}
 \begin{enumerate}
-    \item \textit{``don't waste the free quota trying to hit limits. one thing: don't touch or read my .env file. you can create .env.example and update .gitignore; i'll add the api key myself.''}  
+    \item \textit{``please check groq's current official docs and my account's model limits are given below so do check that also before planning experiments. don't waste the free quota trying to hit limits. one thing: don't touch or read my .env file. you can create .env.example and update .gitignore; i'll add the api key myself. for now, just give me a simple implementation plan covering the required pipeline, groq integration, stand-in service, five load scenarios, 15+ evaluation questions, three retrieval configurations, metrics and exact results.csv format. also account for the two-page report, all required headings, and genuine ai-assistant history.''}  
     \textbf{Why it mattered:} Established strict operational boundaries: zero exposure of secrets and clean isolation between real service baseline calibration and Stand-in heavy load testing, protecting the account's daily token allocation.
-    \item \textit{``before coding fix the report outline so all 11 headings from the assignment are in the exact required order keep the implementation simple reproducible and within assignment constraints''}  
+    \item \textit{``the plan looks good proceed with implementation and use your own judgment for technical decisions dont stop to ask me about routine things before coding fix the report outline so all 11 headings from the assignment are in the exact required order keep the implementation simple reproducible and within assignment constraints start with pdf ingestion chunking retrieval citations and a small real groq baseline test protect api quota never read or expose .env and verify model ids and limits from current official docs clearly separate documented facts measured results and assumptions git instruction commit at meaningful working milestones using a single line commit message describing the change like `feat: add pdf ingestion and cited retrieval` check the diff before every commit never commit secrets and dont push unless i explicitly ask after every milestone report what works what was tested any issues and what comes next dont make up benchmark results or assistant collaboration history''}  
     \textbf{Why it mattered:} Anchored project development directly to the assignment rubric, preventing organizational drift and guaranteeing compliance with the required heading order and table schemas.
-    \item \textit{``Check results.csv against the actual benchmark logs and code. Investigate the identical real-service TTFT/total-latency percentiles, verify all five real probe requests are represented correctly, and confirm every row represents an actual request rather than a manually constructed or aggregated record.''}  
+    \item \textit{``Check results.csv against the actual benchmark logs and code. Investigate the identical real-service TTFT/total-latency percentiles, verify all five real probe requests are represented correctly, and confirm every row represents an actual request rather than a manually constructed or aggregated record. Validate answer grades and citations against the papers, investigate the low retrieval accuracy, and check why the stand-in rate-limits requests in the steady scenario. Verify every assignment requirement, including the three retrieval failure examples, slow-request latency breakdown, retry-induced congestion, daily-budget exhaustion response, exact CSV schema, all required report headings, and the separate half-page assistant-work disclosure. Fix issues and rerun affected experiments where necessary. Never fabricate results.''}  
     \textbf{Why it mattered:} Triggered the forensic audit that uncovered the reasoning token channel behavior in \texttt{openai/gpt-oss-20b} and the unpaced token saturation in the benchmark script, leading to authentic streaming token extraction and accurate measurements.
 \end{enumerate}
 
