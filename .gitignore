@@ -1,0 +1,22 @@
+# Environment variables & secrets (NEVER commit)
+.env
+.env.local
+.env.*.local
+*.env
+groq_key.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.pytest_cache/
+
+# Large binaries & cache
+papers/*.pdf
+data/papers/*.pdf
+cache/
