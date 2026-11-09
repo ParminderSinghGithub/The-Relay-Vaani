@@ -32,3 +32,4 @@ python scripts/generate_tables.py
 - `results.csv`: 175 captured benchmark requests.
 - `report/report.tex`: Complete Overleaf-ready LaTeX technical report.
 - `submission/`: Clean submission deliverables for evaluation.
+

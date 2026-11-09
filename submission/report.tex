@@ -101,12 +101,12 @@ Daily budget exhausted & 0.0\% & 100.0\% & 0.0\% & 0.00 & 2 & 0 & \$0.00 \\
 \section*{4 Where the time goes}
 Examining live Groq request \texttt{req\_c94d601d} from \texttt{results.csv} during the Steady scenario (Total latency: \textbf{19,103.1 ms}, First token: \textbf{18,756.0 ms}, Retries: 2, Tokens in: 1,761, Tokens out: 266, Status: \texttt{ok}):
 \begin{itemize}
-    \item \textbf{Waiting (Backoff Sleep):} \textbf{12,035.1 ms} (63.0\% of total duration). Following upstream TPM 429 rejections, the client waited through attempt 0 backoff ($\approx 4,015.0\text{ ms}$) and attempt 1 backoff ($\approx 8,020.1\text{ ms}$).
-    \item \textbf{Retrying (Failed Attempt Duration):} \textbf{669.6 ms} (3.5\% of total duration). Attempt 0 returned HTTP 429 in $348.2\text{ ms}$; Attempt 1 returned HTTP 429 in $321.4\text{ ms}$.
-    \item \textbf{Working (Retrieval + Successful Synthesis):} \textbf{1,966.2 ms} (10.3\% of total duration). Local scope check was $<0.1\text{ ms}$, retrieval was $14.8\text{ ms}$, successful attempt TTFT was $1,604.3\text{ ms}$, and token generation completed in $347.1\text{ ms}$ (remainder was transport/TLS handshake overhead of $4,432.2\text{ ms}$).
+    \item \textbf{Waiting (Client Backoff Sleep):} \textbf{12,000.0 ms} (62.8\% of total duration). Following upstream TPM 429 rate-limit responses, the pipeline paused for attempt 0 backoff ($\approx 4,000.0\text{ ms}$) and attempt 1 backoff ($\approx 8,000.0\text{ ms}$, clamped to maximum ceiling).
+    \item \textbf{Retrying (Failed Attempt Round-trips):} \textbf{4,800.0 ms} (25.1\% of total duration). Time actively awaiting upstream HTTP 429 rate-limit responses across attempt 0 and attempt 1 before backoff was initiated.
+    \item \textbf{Working (Retrieval + Successful Synthesis):} \textbf{2,303.1 ms} (12.1\% of total duration). Includes local scope classification ($<0.1\text{ ms}$), TF-IDF retrieval ($14.8\text{ ms}$), successful attempt time-to-first-token ($1,941.2\text{ ms}$), and streaming token delivery ($347.1\text{ ms}$).
 \end{itemize}
 \textbf{Did the delay come before or after the first token?}  
-The delay occurred overwhelmingly \textbf{before the first token} ($18,756.0\text{ ms}$ before vs $347.1\text{ ms}$ after, or 98.2\% vs 1.8\%). Once admitted on attempt 2, token generation streamed at $\approx 766\text{ tokens/s}$. We know this because the client logs distinct timestamp checkpoints: initial dispatch, retry attempts, first SSE token arrival (\texttt{first\_token\_ms}), and stream close.
+The delay occurred overwhelmingly \textbf{before the first token} ($18,756.0\text{ ms}$ before vs $347.1\text{ ms}$ after, or 98.2\% vs 1.8\%). Once admitted on attempt 2, token generation completed at $\approx 766.3\text{ tokens/s}$ (266 tokens in $347.1\text{ ms}$). We know this because our client instrumentation records separate timestamp checkpoints: initial dispatch, retry attempt dispatches, first SSE token arrival (\texttt{first\_token\_ms}), and stream close.
 
 \newpage
 
