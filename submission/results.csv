@@ -1,0 +1,176 @@
+request_id,scenario,source,start_time,first_token_ms,total_ms,status,retries,tokens_in,tokens_out,retrieval_setting,answer_grade
+req_c657c0c3,retrieval_eval,stand-in,2026-11-09T15:07:09.957881+00:00,1535.0,2847.1,ok,0,1215,59,setting_a,correct
+req_24e30fc5,retrieval_eval,stand-in,2026-11-09T15:07:12.855949+00:00,1689.2,2667.6,ok,0,1515,44,setting_a,correct
+req_9799026b,retrieval_eval,stand-in,2026-11-09T15:07:15.586170+00:00,1699.0,2722.1,ok,0,1554,46,setting_a,correct
+req_d80a0e10,retrieval_eval,stand-in,2026-11-09T15:07:18.359604+00:00,1793.6,2660.8,ok,0,1363,39,setting_a,correct
+req_989e5219,retrieval_eval,stand-in,2026-11-09T15:07:21.071534+00:00,1503.8,2615.2,ok,0,1401,50,setting_a,correct
+req_3b20acb2,retrieval_eval,stand-in,2026-11-09T15:07:23.737810+00:00,1507.7,2530.5,ok,0,1498,46,setting_a,correct
+req_5652512a,retrieval_eval,stand-in,2026-11-09T15:07:26.319113+00:00,1735.3,2536.3,ok,0,1469,36,setting_a,correct
+req_77151e22,retrieval_eval,stand-in,2026-11-09T15:07:28.908418+00:00,1625.6,2492.9,ok,0,1439,39,setting_a,correct
+req_40d64692,retrieval_eval,stand-in,2026-11-09T15:07:31.452468+00:00,1754.3,2555.0,ok,0,1526,36,setting_a,correct
+req_ee76015e,retrieval_eval,stand-in,2026-11-09T15:07:34.058945+00:00,1680.1,2769.4,ok,0,1482,49,setting_a,refused_correctly
+req_cd1b3c5e,retrieval_eval,stand-in,2026-11-09T15:07:36.879692+00:00,1669.6,2781.4,ok,0,1388,50,setting_a,correct
+req_37f128af,retrieval_eval,stand-in,2026-11-09T15:07:39.711910+00:00,0.0,0.0,ok,0,18,32,setting_a,refused_correctly
+req_c29a2016,retrieval_eval,stand-in,2026-11-09T15:07:39.763255+00:00,0.0,0.1,ok,0,13,32,setting_a,refused_correctly
+req_892c5b15,retrieval_eval,stand-in,2026-11-09T15:07:39.814974+00:00,0.0,0.0,ok,0,20,32,setting_a,refused_correctly
+req_75d0883e,retrieval_eval,stand-in,2026-11-09T15:07:39.866365+00:00,0.0,0.0,ok,0,18,32,setting_a,refused_correctly
+req_cea81164,retrieval_eval,stand-in,2026-11-09T15:07:39.917205+00:00,1691.7,2492.0,ok,0,1571,36,setting_a,refused_correctly
+req_222f1c40,retrieval_eval,stand-in,2026-11-09T15:07:42.656719+00:00,1660.3,2971.9,ok,0,1981,59,setting_b,correct
+req_49d2feb8,retrieval_eval,stand-in,2026-11-09T15:07:45.681419+00:00,1638.5,2616.7,ok,0,1968,44,setting_b,correct
+req_8843b8f5,retrieval_eval,stand-in,2026-11-09T15:07:48.349506+00:00,1607.9,2630.5,ok,0,2015,46,setting_b,correct
+req_dc6c7f89,retrieval_eval,stand-in,2026-11-09T15:07:51.031130+00:00,1679.3,2546.3,ok,0,1881,39,setting_b,correct
+req_490e9e8d,retrieval_eval,stand-in,2026-11-09T15:07:53.628359+00:00,1515.3,2626.6,ok,0,1761,50,setting_b,correct
+req_4bb47c54,retrieval_eval,stand-in,2026-11-09T15:07:56.306027+00:00,1532.3,2555.3,ok,0,1510,46,setting_b,correct
+req_c233494e,retrieval_eval,stand-in,2026-11-09T15:07:58.912510+00:00,1738.6,2539.3,ok,0,1966,36,setting_b,correct
+req_cd9507a2,retrieval_eval,stand-in,2026-11-09T15:08:01.503057+00:00,1569.6,2437.3,ok,0,1913,39,setting_b,correct
+req_fff7caf9,retrieval_eval,stand-in,2026-11-09T15:08:03.991124+00:00,1591.7,2392.0,ok,0,2004,36,setting_b,correct
+req_5652ed41,retrieval_eval,stand-in,2026-11-09T15:08:06.434725+00:00,1594.1,2683.5,ok,0,2225,49,setting_b,refused_correctly
+req_5d339bde,retrieval_eval,stand-in,2026-11-09T15:08:09.169727+00:00,1704.5,2816.2,ok,0,1865,50,setting_b,correct
+req_31ca1b77,retrieval_eval,stand-in,2026-11-09T15:08:12.037035+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_8a04b9ad,retrieval_eval,stand-in,2026-11-09T15:08:12.088468+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_b71db6d7,retrieval_eval,stand-in,2026-11-09T15:08:12.139270+00:00,0.0,0.0,ok,0,20,32,setting_b,refused_correctly
+req_e81cdccc,retrieval_eval,stand-in,2026-11-09T15:08:12.190454+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_e4b285fe,retrieval_eval,stand-in,2026-11-09T15:08:12.241623+00:00,1802.0,2602.7,ok,0,1647,36,setting_b,refused_correctly
+req_6ea17ed9,retrieval_eval,stand-in,2026-11-09T15:08:15.114157+00:00,1532.0,2843.6,ok,0,1034,59,setting_c,correct
+req_2b549cff,retrieval_eval,stand-in,2026-11-09T15:08:18.009302+00:00,1728.6,2707.3,ok,0,1497,44,setting_c,correct
+req_581f828d,retrieval_eval,stand-in,2026-11-09T15:08:20.768126+00:00,1745.5,2768.0,ok,0,1443,46,setting_c,correct
+req_6acb2499,retrieval_eval,stand-in,2026-11-09T15:08:23.591399+00:00,1801.5,2668.8,ok,0,1417,39,setting_c,correct
+req_4b3cf202,retrieval_eval,stand-in,2026-11-09T15:08:26.312595+00:00,1783.7,2895.9,ok,0,1248,50,setting_c,correct
+req_d037d909,retrieval_eval,stand-in,2026-11-09T15:08:29.260369+00:00,1622.8,2645.5,ok,0,1713,46,setting_c,correct
+req_53c0499a,retrieval_eval,stand-in,2026-11-09T15:08:31.956837+00:00,1625.7,2426.1,ok,0,1645,36,setting_c,correct
+req_37ce5934,retrieval_eval,stand-in,2026-11-09T15:08:34.434021+00:00,1641.7,2508.9,ok,0,964,39,setting_c,correct
+req_8cae5350,retrieval_eval,stand-in,2026-11-09T15:08:36.994179+00:00,1619.6,2420.1,ok,0,1024,36,setting_c,correct
+req_48806a8c,retrieval_eval,stand-in,2026-11-09T15:08:39.465271+00:00,1687.7,2777.1,ok,0,536,49,setting_c,refused_correctly
+req_55c2e26b,retrieval_eval,stand-in,2026-11-09T15:08:42.293457+00:00,1521.1,2632.7,ok,0,1245,50,setting_c,correct
+req_f0b12c03,retrieval_eval,stand-in,2026-11-09T15:08:44.977424+00:00,0.0,0.0,ok,0,18,32,setting_c,refused_correctly
+req_ce5d3264,retrieval_eval,stand-in,2026-11-09T15:08:45.028339+00:00,0.0,0.0,ok,0,13,32,setting_c,refused_correctly
+req_2c10402a,retrieval_eval,stand-in,2026-11-09T15:08:45.079063+00:00,0.0,0.0,ok,0,20,32,setting_c,refused_correctly
+req_1ad13f93,retrieval_eval,stand-in,2026-11-09T15:08:45.130029+00:00,0.0,0.0,ok,0,18,32,setting_c,refused_correctly
+req_676a1d67,retrieval_eval,stand-in,2026-11-09T15:08:45.181111+00:00,1592.5,2392.8,ok,0,1498,36,setting_c,refused_correctly
+req_ae2f542a,steady,real,2026-11-09T15:08:47.854142+00:00,1868.9,2278.6,ok,0,1981,252,setting_b,correct
+req_96bca480,steady,real,2026-11-09T15:08:53.134073+00:00,1378.4,1940.4,ok,0,1968,330,setting_b,correct
+req_1a6f06e3,steady,real,2026-11-09T15:08:58.075384+00:00,1137.3,1526.1,ok,0,2015,269,setting_b,correct
+req_56e2df38,steady,real,2026-11-09T15:09:02.602711+00:00,15029.4,15611.2,ok,2,1881,455,setting_b,correct
+req_c94d601d,steady,real,2026-11-09T15:09:21.214849+00:00,18756.0,19103.1,ok,2,1761,266,setting_b,correct
+req_2a616097,steady,stand-in,2026-11-09T15:09:43.319239+00:00,1692.3,3004.0,ok,0,1981,59,setting_b,correct
+req_a598a08a,steady,stand-in,2026-11-09T15:09:46.374639+00:00,1687.8,2666.2,ok,0,1968,44,setting_b,correct
+req_a0c8db17,steady,stand-in,2026-11-09T15:09:49.092099+00:00,1728.8,2751.5,ok,0,2015,46,setting_b,correct
+req_9b6f00a4,steady,stand-in,2026-11-09T15:09:51.894659+00:00,1793.1,2689.0,ok,0,1881,39,setting_b,correct
+req_1c3058ae,steady,stand-in,2026-11-09T15:09:54.643868+00:00,1521.3,2633.1,ok,0,1761,50,setting_b,correct
+req_3f1ea065,steady,stand-in,2026-11-09T15:09:57.329619+00:00,1700.1,2722.6,ok,0,1510,46,setting_b,correct
+req_5dcbc72f,steady,stand-in,2026-11-09T15:10:00.103361+00:00,1742.2,2542.4,ok,0,1966,36,setting_b,correct
+req_5cb86384,steady,stand-in,2026-11-09T15:10:02.697076+00:00,1703.0,2570.2,ok,0,1913,39,setting_b,correct
+req_78ce828b,steady,stand-in,2026-11-09T15:10:05.318334+00:00,1799.0,2599.5,ok,0,2004,36,setting_b,correct
+req_039b3910,steady,stand-in,2026-11-09T15:10:07.969008+00:00,1792.8,2882.3,ok,0,2225,49,setting_b,refused_correctly
+req_4485f851,steady,stand-in,2026-11-09T15:10:10.902050+00:00,1739.1,2852.3,ok,0,1865,50,setting_b,correct
+req_8d6b7d4e,steady,stand-in,2026-11-09T15:10:13.807408+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_d1a9bc39,burst,stand-in,2026-11-09T15:10:13.999091+00:00,1872.5,3183.9,ok,0,1981,59,setting_b,correct
+req_78fe2613,burst,stand-in,2026-11-09T15:10:14.175537+00:00,0.0,6004.0,rate_limited,2,5904,0,setting_b,wrong
+req_e1ff994e,burst,stand-in,2026-11-09T15:10:14.091586+00:00,0.0,6004.9,rate_limited,2,6045,0,setting_b,wrong
+req_d569ed43,burst,stand-in,2026-11-09T15:10:14.214646+00:00,0.0,6005.3,rate_limited,2,5643,0,setting_b,wrong
+req_a6e32872,burst,stand-in,2026-11-09T15:10:14.095770+00:00,0.0,6004.6,rate_limited,2,5283,0,setting_b,wrong
+req_d39a4ac4,burst,stand-in,2026-11-09T15:10:14.125272+00:00,2217.4,3240.3,ok,0,1510,46,setting_b,correct
+req_f31fae46,burst,stand-in,2026-11-09T15:10:14.022693+00:00,0.0,6007.3,rate_limited,2,5898,0,setting_b,wrong
+req_3dfc530c,burst,stand-in,2026-11-09T15:10:13.915825+00:00,1522.4,2389.4,ok,0,1913,39,setting_b,correct
+req_ffef5afb,burst,stand-in,2026-11-09T15:10:13.940517+00:00,1816.1,2616.6,ok,0,2004,36,setting_b,correct
+req_5d4e2efe,burst,stand-in,2026-11-09T15:10:14.264099+00:00,0.0,6007.0,rate_limited,2,6675,0,setting_b,wrong
+req_d78033ca,burst,stand-in,2026-11-09T15:10:14.253846+00:00,0.0,6004.4,rate_limited,2,5595,0,setting_b,wrong
+req_3abb675c,burst,stand-in,2026-11-09T15:10:14.150961+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_b1fcbc04,burst,stand-in,2026-11-09T15:10:14.183611+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_a29d87f4,burst,stand-in,2026-11-09T15:10:14.012109+00:00,0.0,0.0,ok,0,20,32,setting_b,refused_correctly
+req_6de6ca71,burst,stand-in,2026-11-09T15:10:14.154926+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_00f85745,burst,stand-in,2026-11-09T15:10:14.146573+00:00,0.0,6003.8,rate_limited,2,4941,0,setting_b,wrong
+req_ef6f709b,burst,stand-in,2026-11-09T15:10:14.382706+00:00,0.0,6005.5,rate_limited,2,5943,0,setting_b,wrong
+req_ed2c61d0,burst,stand-in,2026-11-09T15:10:14.302314+00:00,0.0,6005.3,rate_limited,2,5904,0,setting_b,wrong
+req_ff3ed6f6,burst,stand-in,2026-11-09T15:10:14.576810+00:00,0.0,6003.9,rate_limited,2,6045,0,setting_b,wrong
+req_676e3eac,burst,stand-in,2026-11-09T15:10:16.673429+00:00,0.0,6003.6,rate_limited,2,5643,0,setting_b,wrong
+req_10ab2316,burst,stand-in,2026-11-09T15:10:16.864927+00:00,0.0,6003.4,rate_limited,2,5283,0,setting_b,wrong
+req_2f647e27,burst,stand-in,2026-11-09T15:10:17.440750+00:00,0.0,6004.1,rate_limited,2,4530,0,setting_b,wrong
+req_5fb0c36b,burst,stand-in,2026-11-09T15:10:17.499271+00:00,0.0,6003.9,rate_limited,2,5898,0,setting_b,wrong
+req_f2fd057e,burst,stand-in,2026-11-09T15:10:20.287117+00:00,0.0,6004.4,rate_limited,2,5739,0,setting_b,wrong
+req_58b972b7,burst,stand-in,2026-11-09T15:10:20.198791+00:00,0.0,6003.4,rate_limited,2,6012,0,setting_b,wrong
+req_016f6d53,burst,stand-in,2026-11-09T15:10:20.175797+00:00,0.0,6004.1,rate_limited,2,6675,0,setting_b,wrong
+req_65b91b12,burst,stand-in,2026-11-09T15:10:20.265370+00:00,0.0,6003.8,rate_limited,2,5595,0,setting_b,wrong
+req_28520239,burst,stand-in,2026-11-09T15:10:20.365331+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_f973a230,burst,stand-in,2026-11-09T15:10:20.607040+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_6c1cd92e,burst,stand-in,2026-11-09T15:10:20.287117+00:00,0.0,0.0,ok,0,20,32,setting_b,refused_correctly
+req_72c614f4,sustained overload,stand-in,2026-11-09T15:10:26.557022+00:00,1847.4,3158.9,ok,0,1981,59,setting_b,correct
+req_47754ab5,sustained overload,stand-in,2026-11-09T15:10:26.988165+00:00,0.0,6004.3,rate_limited,2,5904,0,setting_b,wrong
+req_7b84757a,sustained overload,stand-in,2026-11-09T15:10:26.676287+00:00,2274.8,3299.8,ok,0,2015,46,setting_b,correct
+req_62d9445a,sustained overload,stand-in,2026-11-09T15:10:27.021254+00:00,0.0,6005.7,rate_limited,2,5643,0,setting_b,wrong
+req_ef159060,sustained overload,stand-in,2026-11-09T15:10:26.800603+00:00,0.0,6005.8,rate_limited,2,5283,0,setting_b,wrong
+req_211a4855,sustained overload,stand-in,2026-11-09T15:10:26.769515+00:00,0.0,6010.1,rate_limited,2,4530,0,setting_b,wrong
+req_f26178ca,sustained overload,stand-in,2026-11-09T15:10:27.094919+00:00,0.0,6003.6,rate_limited,2,5898,0,setting_b,wrong
+req_1a858538,sustained overload,stand-in,2026-11-09T15:10:26.965238+00:00,0.0,6011.6,rate_limited,2,5739,0,setting_b,wrong
+req_2106b9f5,sustained overload,stand-in,2026-11-09T15:10:26.799377+00:00,0.0,6006.8,rate_limited,2,6012,0,setting_b,wrong
+req_8b598054,sustained overload,stand-in,2026-11-09T15:10:26.480756+00:00,1661.0,2750.6,ok,0,2225,49,setting_b,refused_correctly
+req_9c5fc445,sustained overload,stand-in,2026-11-09T15:10:29.518556+00:00,0.0,6003.5,rate_limited,2,5595,0,setting_b,wrong
+req_1b3ef485,sustained overload,stand-in,2026-11-09T15:10:30.454128+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_9a215b77,sustained overload,stand-in,2026-11-09T15:10:30.469403+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_293e8994,sustained overload,stand-in,2026-11-09T15:10:30.958933+00:00,0.0,0.0,ok,0,20,32,setting_b,refused_correctly
+req_1ac6229f,sustained overload,stand-in,2026-11-09T15:10:30.725721+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_cdd1f0ad,sustained overload,stand-in,2026-11-09T15:10:31.318913+00:00,0.0,6004.4,rate_limited,2,4941,0,setting_b,wrong
+req_b8c57e76,sustained overload,stand-in,2026-11-09T15:10:31.241399+00:00,0.0,6004.1,rate_limited,2,5943,0,setting_b,wrong
+req_82352574,sustained overload,stand-in,2026-11-09T15:10:33.086014+00:00,0.0,6003.9,rate_limited,2,5904,0,setting_b,wrong
+req_49361352,sustained overload,stand-in,2026-11-09T15:10:33.338276+00:00,0.0,6007.9,rate_limited,2,6045,0,setting_b,wrong
+req_a2e772d3,sustained overload,stand-in,2026-11-09T15:10:33.555014+00:00,0.0,6004.7,rate_limited,2,5643,0,setting_b,wrong
+req_7dbec367,sustained overload,stand-in,2026-11-09T15:10:33.249491+00:00,0.0,6002.9,rate_limited,2,5283,0,setting_b,wrong
+req_dfcb16fa,sustained overload,stand-in,2026-11-09T15:10:33.094133+00:00,0.0,6003.8,rate_limited,2,4530,0,setting_b,wrong
+req_81405b2d,sustained overload,stand-in,2026-11-09T15:10:33.275015+00:00,0.0,6003.3,rate_limited,2,5898,0,setting_b,wrong
+req_09307682,sustained overload,stand-in,2026-11-09T15:10:33.439797+00:00,0.0,6004.0,rate_limited,2,5739,0,setting_b,wrong
+req_7407eccb,sustained overload,stand-in,2026-11-09T15:10:36.067627+00:00,0.0,6004.1,rate_limited,2,6012,0,setting_b,wrong
+req_9a9fdb3f,sustained overload,stand-in,2026-11-09T15:10:37.855796+00:00,0.0,6004.2,rate_limited,2,6675,0,setting_b,wrong
+req_dc7fcf55,sustained overload,stand-in,2026-11-09T15:10:37.656491+00:00,0.0,6005.1,rate_limited,2,5595,0,setting_b,wrong
+req_1ef0b382,sustained overload,stand-in,2026-11-09T15:10:39.383546+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_cfecd626,sustained overload,stand-in,2026-11-09T15:10:39.199055+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_54392a17,sustained overload,stand-in,2026-11-09T15:10:39.485373+00:00,0.0,0.0,ok,0,20,32,setting_b,refused_correctly
+req_069d33e7,sustained overload,stand-in,2026-11-09T15:10:39.916372+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_aeb3cf3f,sustained overload,stand-in,2026-11-09T15:10:39.845931+00:00,0.0,6003.1,rate_limited,2,4941,0,setting_b,wrong
+req_f5734040,sustained overload,stand-in,2026-11-09T15:10:40.050092+00:00,0.0,6017.4,rate_limited,2,5943,0,setting_b,wrong
+req_5fd1b903,sustained overload,stand-in,2026-11-09T15:10:39.923432+00:00,0.0,6004.2,rate_limited,2,5904,0,setting_b,wrong
+req_92b8362a,sustained overload,stand-in,2026-11-09T15:10:39.896187+00:00,0.0,6003.9,rate_limited,2,6045,0,setting_b,wrong
+req_0fdad438,sustained overload,stand-in,2026-11-09T15:10:39.775282+00:00,0.0,6004.0,rate_limited,2,5643,0,setting_b,wrong
+req_b0fa7fff,sustained overload,stand-in,2026-11-09T15:10:40.270142+00:00,0.0,6005.6,rate_limited,2,5283,0,setting_b,wrong
+req_df52f0fd,sustained overload,stand-in,2026-11-09T15:10:40.424310+00:00,0.0,6004.6,rate_limited,2,4530,0,setting_b,wrong
+req_d14e3be9,sustained overload,stand-in,2026-11-09T15:10:42.583436+00:00,0.0,6004.5,rate_limited,2,5898,0,setting_b,wrong
+req_a1965bbc,sustained overload,stand-in,2026-11-09T15:10:44.447673+00:00,0.0,6004.4,rate_limited,2,5739,0,setting_b,wrong
+req_d60a9376,sustained overload,stand-in,2026-11-09T15:10:44.541342+00:00,0.0,6003.3,rate_limited,2,6012,0,setting_b,wrong
+req_b564b339,sustained overload,stand-in,2026-11-09T15:10:46.405527+00:00,0.0,6004.9,rate_limited,2,6675,0,setting_b,wrong
+req_39988a96,sustained overload,stand-in,2026-11-09T15:10:46.627951+00:00,0.0,6003.7,rate_limited,2,5595,0,setting_b,wrong
+req_cc62e29a,sustained overload,stand-in,2026-11-09T15:10:46.599499+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_b1da2d38,sustained overload,stand-in,2026-11-09T15:10:46.465432+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_d2949385,per-minute limit halved,stand-in,2026-11-09T15:10:53.028045+00:00,0.0,6004.5,rate_limited,2,5943,0,setting_b,wrong
+req_94dd09c4,per-minute limit halved,stand-in,2026-11-09T15:10:52.793808+00:00,1720.0,2698.8,ok,0,1968,44,setting_b,correct
+req_71439ad7,per-minute limit halved,stand-in,2026-11-09T15:10:53.304148+00:00,0.0,6006.6,rate_limited,2,6045,0,setting_b,wrong
+req_7ddd0d82,per-minute limit halved,stand-in,2026-11-09T15:10:52.817110+00:00,0.0,6003.0,rate_limited,2,5643,0,setting_b,wrong
+req_1904523d,per-minute limit halved,stand-in,2026-11-09T15:10:53.464326+00:00,1998.7,3110.7,ok,0,1761,50,setting_b,correct
+req_9f227db4,per-minute limit halved,stand-in,2026-11-09T15:10:53.476576+00:00,0.0,6008.5,rate_limited,2,4530,0,setting_b,wrong
+req_67c019d0,per-minute limit halved,stand-in,2026-11-09T15:10:53.162749+00:00,0.0,6004.8,rate_limited,2,5898,0,setting_b,wrong
+req_cd35c126,per-minute limit halved,stand-in,2026-11-09T15:10:53.108527+00:00,0.0,6003.2,rate_limited,2,5739,0,setting_b,wrong
+req_21232ea7,per-minute limit halved,stand-in,2026-11-09T15:10:55.703058+00:00,0.0,6005.0,rate_limited,2,6012,0,setting_b,wrong
+req_76e26f05,per-minute limit halved,stand-in,2026-11-09T15:10:57.072002+00:00,0.0,6004.7,rate_limited,2,6675,0,setting_b,wrong
+req_cbc55539,per-minute limit halved,stand-in,2026-11-09T15:10:58.978363+00:00,0.0,6003.9,rate_limited,2,5595,0,setting_b,wrong
+req_dbdd817e,per-minute limit halved,stand-in,2026-11-09T15:10:59.881097+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_e8d3eb0d,per-minute limit halved,stand-in,2026-11-09T15:10:59.809068+00:00,0.0,0.0,ok,0,13,32,setting_b,refused_correctly
+req_f43a4bc9,per-minute limit halved,stand-in,2026-11-09T15:10:59.689502+00:00,0.0,0.0,ok,0,20,32,setting_b,refused_correctly
+req_3829119f,per-minute limit halved,stand-in,2026-11-09T15:10:59.522831+00:00,0.0,0.0,ok,0,18,32,setting_b,refused_correctly
+req_549dc8bf,per-minute limit halved,stand-in,2026-11-09T15:10:59.853440+00:00,0.0,6003.1,rate_limited,2,4941,0,setting_b,wrong
+req_02b0629c,per-minute limit halved,stand-in,2026-11-09T15:11:00.182428+00:00,0.0,6003.2,rate_limited,2,5943,0,setting_b,wrong
+req_6eadf489,per-minute limit halved,stand-in,2026-11-09T15:11:00.379339+00:00,0.0,6003.7,rate_limited,2,5904,0,setting_b,wrong
+req_cb96916f,per-minute limit halved,stand-in,2026-11-09T15:11:00.030723+00:00,0.0,6003.7,rate_limited,2,6045,0,setting_b,wrong
+req_ddae4cdd,per-minute limit halved,stand-in,2026-11-09T15:11:00.608335+00:00,0.0,6003.5,rate_limited,2,5643,0,setting_b,wrong
+req_b3fe944e,daily budget exhausted,stand-in,2026-11-09T15:11:06.624731+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_26074e0e,daily budget exhausted,stand-in,2026-11-09T15:11:06.646131+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_878ed3e7,daily budget exhausted,stand-in,2026-11-09T15:11:06.667132+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_9a08a67e,daily budget exhausted,stand-in,2026-11-09T15:11:06.688305+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_dcd5054e,daily budget exhausted,stand-in,2026-11-09T15:11:06.709799+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_2cf10ec8,daily budget exhausted,stand-in,2026-11-09T15:11:06.732480+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_66875d5d,daily budget exhausted,stand-in,2026-11-09T15:11:06.753538+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_7f733e58,daily budget exhausted,stand-in,2026-11-09T15:11:06.774580+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_c25e1f7a,daily budget exhausted,stand-in,2026-11-09T15:11:06.795876+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_55c68ea1,daily budget exhausted,stand-in,2026-11-09T15:11:06.816674+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_d473d3d0,daily budget exhausted,stand-in,2026-11-09T15:11:06.837511+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_7388c70a,daily budget exhausted,stand-in,2026-11-09T15:11:06.858322+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_a91aa61a,daily budget exhausted,stand-in,2026-11-09T15:11:06.879366+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_b011204a,daily budget exhausted,stand-in,2026-11-09T15:11:06.900468+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly
+req_17f02797,daily budget exhausted,stand-in,2026-11-09T15:11:06.921307+00:00,0.0,0.0,rate_limited,0,0,0,setting_b,refused_correctly

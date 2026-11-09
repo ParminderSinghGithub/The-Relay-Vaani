@@ -1,0 +1,147 @@
+[
+  {
+    "id": "q01",
+    "category": "factual_single_paper",
+    "paper": "1706.03762v7",
+    "question": "In the base model of 'Attention Is All You Need', what are the exact values of d_model and d_k, and how many attention heads h are used?",
+    "target_facts": ["d_model = 512", "h = 8", "d_k = 64"],
+    "expected_grade": "correct",
+    "expected_citation": "Attention Is All You Need"
+  },
+  {
+    "id": "q02",
+    "category": "factual_single_paper",
+    "paper": "1706.03762v7",
+    "question": "How are positional encodings computed in the Transformer base model using sine and cosine functions?",
+    "target_facts": ["sin", "cos", "10000", "2i/d_model"],
+    "expected_grade": "correct",
+    "expected_citation": "Attention Is All You Need"
+  },
+  {
+    "id": "q03",
+    "category": "factual_single_paper",
+    "paper": "2410.00037v1",
+    "question": "What is the frame rate of the Mimi neural audio codec, and what is its total latency in the Moshi paper?",
+    "target_facts": ["12.5 Hz", "80ms", "40ms frame size", "40ms lookahead"],
+    "expected_grade": "correct",
+    "expected_citation": "Moshi"
+  },
+  {
+    "id": "q04",
+    "category": "factual_single_paper",
+    "paper": "2410.00037v1",
+    "question": "How does Moshi model multi-stream audio for simultaneous listening and talking in spoken dialogue?",
+    "target_facts": ["multi-stream", "parallel", "user audio tokens", "generated tokens"],
+    "expected_grade": "correct",
+    "expected_citation": "Moshi"
+  },
+  {
+    "id": "q05",
+    "category": "factual_single_paper",
+    "paper": "2507.07955v2",
+    "question": "What is the primary architectural mechanism used by H-Net to eliminate handcrafted BPE tokenizers?",
+    "target_facts": ["dynamic chunking", "byte-level", "hierarchical"],
+    "expected_grade": "correct",
+    "expected_citation": "Dynamic Chunking"
+  },
+  {
+    "id": "q06",
+    "category": "factual_single_paper",
+    "paper": "2507.07955v2",
+    "question": "On which non-English modalities did Dynamic Chunking (H-Net) demonstrate nearly 4x data efficiency gains over standard tokenization?",
+    "target_facts": ["Chinese", "DNA", "code"],
+    "expected_grade": "correct",
+    "expected_citation": "Dynamic Chunking"
+  },
+  {
+    "id": "q07",
+    "category": "cross_paper_comparison",
+    "paper": "cross_paper",
+    "question": "Compare the sequence representations between the original Transformer and H-Net: how do their tokenization strategies differ?",
+    "target_facts": ["subword/BPE vs raw bytes with dynamic chunking"],
+    "expected_grade": "correct",
+    "expected_citation": "Attention Is All You Need"
+  },
+  {
+    "id": "q08",
+    "category": "cross_paper_comparison",
+    "paper": "cross_paper",
+    "question": "How does Moshi's streaming multi-stream generation contrast with the standard encoder-decoder Transformer cross-attention setup?",
+    "target_facts": ["full-duplex parallel streams vs sequential encoder-decoder"],
+    "expected_grade": "correct",
+    "expected_citation": "Moshi"
+  },
+  {
+    "id": "q09",
+    "category": "naive_retriever_trap",
+    "paper": "2410.00037v1",
+    "question": "Explain the multi-head self-attention mechanism used in Moshi's Helium text language model backbone.",
+    "target_facts": ["Moshi text backbone", "not generic 1706"],
+    "expected_grade": "correct",
+    "expected_citation": "Moshi"
+  },
+  {
+    "id": "q10",
+    "category": "naive_retriever_trap",
+    "paper": "1706.03762v7",
+    "question": "What dynamic chunking threshold is used in the Attention Is All You Need paper?",
+    "target_facts": ["Attention paper does not use dynamic chunking", "refuse trick"],
+    "expected_grade": "refused_correctly",
+    "expected_citation": "Dynamic Chunking"
+  },
+  {
+    "id": "q11",
+    "category": "naive_retriever_trap",
+    "paper": "2507.07955v2",
+    "question": "What is the BPE vocabulary size of the H-Net dynamic chunking model?",
+    "target_facts": ["H-Net has no BPE vocabulary, it operates on raw bytes"],
+    "expected_grade": "correct",
+    "expected_citation": "Dynamic Chunking"
+  },
+  {
+    "id": "q12",
+    "category": "out_of_scope_or_unanswerable",
+    "paper": "out_of_library",
+    "question": "What learning rate schedule and batch size were used to train Llama 3.1 70B?",
+    "target_facts": ["outside library scope"],
+    "expected_grade": "refused_correctly",
+    "expected_citation": ""
+  },
+  {
+    "id": "q13",
+    "category": "out_of_scope_or_unanswerable",
+    "paper": "out_of_library",
+    "question": "Describe the architecture and mixture of experts routing of DeepSeek-R1.",
+    "target_facts": ["outside library scope"],
+    "expected_grade": "refused_correctly",
+    "expected_citation": ""
+  },
+  {
+    "id": "q14",
+    "category": "out_of_scope_or_unanswerable",
+    "paper": "2410.00037v1",
+    "question": "What was the exact GPU power consumption in Megawatts during the entire training run of Moshi?",
+    "target_facts": ["paper does not state power consumption in megawatts"],
+    "expected_grade": "refused_correctly",
+    "expected_citation": ""
+  },
+  {
+    "id": "q15",
+    "category": "out_of_scope_or_unanswerable",
+    "paper": "1706.03762v7",
+    "question": "What was the total training cost in US dollars for the 1706.03762 Transformer models?",
+    "target_facts": ["paper does not state dollar cost"],
+    "expected_grade": "refused_correctly",
+    "expected_citation": ""
+  },
+  {
+    "id": "q16",
+    "category": "out_of_scope_or_unanswerable",
+    "paper": "out_of_library",
+    "question": "How does Whisper's conversational turn-taking compare to Moshi on real phone calls?",
+    "target_facts": ["Whisper is an offline ASR model, not in library"],
+    "expected_grade": "refused_correctly",
+    "expected_citation": ""
+  }
+]
+

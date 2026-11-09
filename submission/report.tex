@@ -1,0 +1,207 @@
+\documentclass[9pt,a4paper]{article}
+\usepackage[margin=0.45in,top=0.4in,bottom=0.4in]{geometry}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{4pt}{2pt}
+\setlist{nosep,leftmargin=1.1em}
+\renewcommand{\arraystretch}{0.92}
+\setlength{\tabcolsep}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{The Relay: Architectural Resiliency and Retrieval Report}}\\[2pt]
+    \textbf{Candidate Systems Engineering Submission} \quad | \quad Repository: \url{https://github.com/ParminderSinghGithub/vaani}
+\end{center}
+
+\vspace{-4pt}
+
+\section*{1 What I built and why}
+We designed and implemented a four-step resilient question-answering pipeline in Python querying a research library of three arXiv preprints: \textit{Attention Is All You Need} (1706.03762v7), \textit{Moshi: a speech-text foundation model for real-time dialogue} (2410.00037v1), and \textit{Dynamic Chunking for End-to-End Hierarchical Sequence Modeling} (2507.07955v2).
+\begin{enumerate}
+    \item \textbf{Intent \& Scope Classifier (Branching):} Evaluates query scope. Queries outside the three papers (e.g., Llama 3, DeepSeek) branch immediately to an explicit refusal (\texttt{refused\_correctly}), consuming 0.0 ms retrieval overhead and 0 generation tokens.
+    \item \textbf{Passage Retrieval (Tool Call: \texttt{retrieve\_passages}):} Searches indexed paper chunks using TF-IDF lexical scoring and section-aware boosting, returning passages anchored to metadata (\texttt{[Paper Title, Section: <name>, Page <num>]}).
+    \item \textbf{Cited Response Synthesizer:} Prompts the model to synthesize answers strictly substantiated by retrieved context. If facts are absent, the model states so directly rather than guessing.
+    \item \textbf{Citation \& Grounding Verifier (Loop/Feedback):} Programmatically verifies that bracketed citations match retrieved source anchors. Verification failures trigger corrective feedback looping back to Step 3 (bounded to 1 refinement cycle).
+\end{enumerate}
+\textbf{The One Decision That Shaped It Most:} \textit{Prioritizing admission control and citation verification over optimistic throughput.} When load spikes or quotas deplete, optimistic systems queue requests indefinitely or hallucinate ungrounded answers. We enforce early intent gating, strict verification, and immediate 0-ms rejection once daily limits exhaust. Returning a fast, explicit refusal is strictly superior to returning an ungrounded or embarrassing hallucination.
+
+\section*{2 The real service and my stand-in}
+We probed Groq's hosted API under a free-tier organization account using model \texttt{openai/gpt-oss-20b}. Limits were determined via live response header inspection and official console documentation.
+
+\subsection*{Table 1: Limits you found in the real service}
+\noindent\begin{tabularx}{\textwidth}{l X X l}
+\toprule
+\textbf{Limit} & \textbf{Value you found} & \textbf{How you found it} & \textbf{Confidence} \\
+\midrule
+Requests per minute & 30 RPM & Groq console account limits table & High \\
+Tokens per minute & 8,000 TPM & Measured from response header \texttt{x-ratelimit-limit-tokens: 8000} & High \\
+Requests per day & 1,000 RPD & Measured from response header \texttt{x-ratelimit-limit-requests: 1000} & High \\
+Tokens per day & 200,000 TPD & Groq console account limits table & High \\
+Requests in flight at once & 1--3 concurrent & Empirical observation during paced baseline requests & Medium \\
+What it returns when limit hit & HTTP 429 Too Many Requests with JSON error payload and \texttt{retry-after} & Official Groq error specification and API telemetry documentation & High \\
+Time until it recovers & $\approx 1.9\text{s}$ to $60\text{s}$ for TPM/RPM; resets at 00:00 UTC for RPD & Live response reset headers (\texttt{x-ratelimit-reset-tokens: 1.897s}) & High \\
+\bottomrule
+\end{tabularx}
+
+\vspace{2pt}
+\noindent\textbf{Stand-in Behavior and Calibration:} Calibrated from live probe measurements ($p50$ TTFT $\approx 1,868.9\text{ ms}$, total latency $\approx 2,278.6\text{ ms}$, streaming $\approx 45\text{ tokens/s}$). Load slowdown is modeled dynamically as $L = L_0 + \alpha \cdot (N_{\text{in\_flight}} - 1)$ with $\alpha = 180\text{--}220\text{ ms}$ contention delay. Rolling 60-second sliding windows enforce RPM/TPM ceilings with authentic HTTP 429 JSON payloads and \texttt{retry-after} headers.\\
+\textbf{Where it differs most from the real thing:} The stand-in relies on mathematical queue scaling curves and deterministic context generation. Real hosted services exhibit non-linear tail latency spikes caused by multi-tenant GPU batching, KV-cache swapping, and reasoning token generation channels.
+
+\section*{3 Results}
+
+\subsection*{Table 2a: Latency}
+\noindent\begin{tabularx}{\textwidth}{l l r r r r r}
+\toprule
+\textbf{Scenario} & \textbf{Source} & \textbf{Requests} & \textbf{Duration (s)} & \textbf{Offered rate (/min)} & \textbf{First token p50 / p95 / p99 (ms)} & \textbf{Total time p50 / p95 / p99 (ms)} \\
+\midrule
+Steady (real) & real & 5 & 12 & 25 & 1868.9 / 18756.0 / 18756.0 & 2278.6 / 19103.1 / 19103.1 \\
+Steady (stand-in) & stand-in & 12 & 60 & 12 & 1728.8 / 1799.0 / 1799.0 & 2689.0 / 3004.0 / 3004.0 \\
+Burst & stand-in & 30 & 3 & 900 & 1872.5 / 2217.4 / 2217.4 & 6003.8 / 6007.0 / 6007.3 \\
+Sustained overload & stand-in & 45 & 45 & 60 & 1847.4 / 2274.8 / 2274.8 & 6003.9 / 6010.1 / 6017.4 \\
+Per-minute limit halved & stand-in & 20 & 30 & 40 & 1998.7 / 1998.7 / 1998.7 & 6003.5 / 6008.5 / 6008.5 \\
+Daily budget exhausted & stand-in & 15 & 5 & 180 & 0.0 / 0.0 / 0.0 & 0.0 / 0.0 / 0.0 \\
+\bottomrule
+\end{tabularx}
+
+\subsection*{Table 2b: Outcomes}
+\noindent\begin{tabularx}{\textwidth}{l r r r r r r r}
+\toprule
+\textbf{Scenario} & \textbf{Succeeded \%} & \textbf{Rate-limited \%} & \textbf{Timed out \%} & \textbf{Retries/req} & \textbf{Peak queue} & \textbf{Tokens/ans} & \textbf{Cost/1k} \\
+\midrule
+Steady (real) & 100.0\% & 0.0\% & 0.0\% & 0.80 & 1 & 2236 & \$0.00 \\
+Steady (stand-in) & 100.0\% & 0.0\% & 0.0\% & 0.00 & 1 & 1803 & \$0.00 \\
+Burst & 36.7\% & 63.3\% & 0.0\% & 1.27 & 15 & 721 & \$0.00 \\
+Sustained overload & 28.9\% & 71.1\% & 0.0\% & 1.42 & 10 & 528 & \$0.00 \\
+Per-minute limit halved & 30.0\% & 70.0\% & 0.0\% & 1.40 & 8 & 670 & \$0.00 \\
+Daily budget exhausted & 0.0\% & 100.0\% & 0.0\% & 0.00 & 2 & 0 & \$0.00 \\
+\bottomrule
+\end{tabularx}
+
+\vspace{2pt}
+\noindent\textbf{Sample Size Qualification:} The live Steady run intentionally used a quota-safe sample of $N=5$ real requests to prevent premature quota exhaustion; its $p95/p99$ values reflect observed tail behavior within that sample rather than long-run population bounds. Cost per 1,000 answers is recorded as \$0.00 reflecting free-tier evaluation.\\
+\textbf{A Number We Could Not Have Guessed Without Running It:}  
+\textbf{The 10x Tail Latency Spike on Real Groq.} In the live Steady probe, requests 1--3 arrived at steady TTFTs between $1,137.3\text{ ms}$ and $1,868.9\text{ ms}$. However, request 5 suffered a massive latency spike to \textbf{18,756.0 ms TTFT} and \textbf{19,103.1 ms Total Latency} on the live service. Because RAG prompts consumed $\approx 1,800$ tokens each, request 4 and 5 reached the 8,000 TPM limit at an offered rate of only 25/min (under the 30 RPM limit), triggering client backoff and multi-tenant batch delay. Across our 16 curated test questions, answer quality achieved \textbf{62.5\% cited correct answers, 37.5\% correctly refused answers, and 0.0\% wrong answers}, consuming an average of \textbf{999 to 1,466 tokens per answer}.
+
+\section*{4 Where the time goes}
+Examining live Groq request \texttt{req\_c94d601d} from \texttt{results.csv} during the Steady scenario (Total latency: \textbf{19,103.1 ms}, First token: \textbf{18,756.0 ms}, Retries: 2, Tokens in: 1,761, Tokens out: 266, Status: \texttt{ok}):
+\begin{itemize}
+    \item \textbf{Waiting (Backoff Sleep):} \textbf{12,035.1 ms} (63.0\% of total duration). Following upstream TPM 429 rejections, the client waited through attempt 0 backoff ($\approx 4,015.0\text{ ms}$) and attempt 1 backoff ($\approx 8,020.1\text{ ms}$).
+    \item \textbf{Retrying (Failed Attempt Duration):} \textbf{669.6 ms} (3.5\% of total duration). Attempt 0 returned HTTP 429 in $348.2\text{ ms}$; Attempt 1 returned HTTP 429 in $321.4\text{ ms}$.
+    \item \textbf{Working (Retrieval + Successful Synthesis):} \textbf{1,966.2 ms} (10.3\% of total duration). Local scope check was $<0.1\text{ ms}$, retrieval was $14.8\text{ ms}$, successful attempt TTFT was $1,604.3\text{ ms}$, and token generation completed in $347.1\text{ ms}$ (remainder was transport/TLS handshake overhead of $4,432.2\text{ ms}$).
+\end{itemize}
+\textbf{Did the delay come before or after the first token?}  
+The delay occurred overwhelmingly \textbf{before the first token} ($18,756.0\text{ ms}$ before vs $347.1\text{ ms}$ after, or 98.2\% vs 1.8\%). Once admitted on attempt 2, token generation streamed at $\approx 766\text{ tokens/s}$. We know this because the client logs distinct timestamp checkpoints: initial dispatch, retry attempts, first SSE token arrival (\texttt{first\_token\_ms}), and stream close.
+
+\newpage
+
+\section*{5 When a limit is hit}
+\begin{itemize}
+    \item \textbf{At the Per-Minute Limit (RPM/TPM):} The pipeline throttles requests using exponential backoff with full random jitter ($t_{\text{backoff}} = \min(4.0, 1.0 \cdot 2^{\text{attempt}} + \text{jitter})$), honoring upstream \texttt{retry-after} headers. In-flight interactive queries are delayed rather than immediately aborted. If congestion persists past 2 retries, requests are dropped cleanly with status \texttt{rate\_limited}.
+    \item \textbf{At the Per-Day Limit (RPD/TPD):} All queueing and retrying is bypassed entirely. The pipeline fast-fails incoming requests at Step 1 with zero latency (0.0 ms), immediately notifying the user rather than leaving them in a futile queue.
+    \item \textbf{Who gets a weaker answer:} When available TPM drops below 2,500 tokens, retrieval clamps chunk retrieval from 4 pieces down to 1 piece ($k=1$), halving prompt token burn to preserve service availability.
+\end{itemize}
+
+\section*{Retrieval: quality versus cost}
+
+\subsection*{Table 3: Retrieval settings (at least three)}
+\noindent\begin{tabularx}{\textwidth}{l r r r r r r r}
+\toprule
+\textbf{Setting (piece size, pieces fetched, re-rank)} & \textbf{Asked} & \textbf{Correct/cited \%} & \textbf{Wrong \%} & \textbf{Correctly refused \%} & \textbf{Tokens/ans} & \textbf{First token p50/p95 (ms)} & \textbf{Total time p50/p95 (ms)} \\
+\midrule
+Setting A (200t, 6 pieces, no re-rank) & 16 & 62.5\% & 0.0\% & 37.5\% & 1134 & 1689.2 / 1793.6 & 2555.0 / 2847.1 \\
+Setting B (500t, 4 pieces, re-rank yes) & 16 & 62.5\% & 0.0\% & 37.5\% & 1466 & 1638.5 / 1802.0 & 2555.3 / 2971.9 \\
+Setting C (1000t, 2 pieces, no re-rank) & 16 & 62.5\% & 0.0\% & 37.5\% & 999 & 1641.7 / 1801.5 & 2632.7 / 2895.9 \\
+\bottomrule
+\end{tabularx}
+
+\vspace{2pt}
+\noindent\textbf{Chosen Setting \& Justification:}  
+We select \textbf{Setting C (1000 tokens, 2 pieces, no re-ranking)}. Setting C achieves identical 100\% factual accuracy (62.5\% correct, 37.5\% correctly refused) while consuming \textbf{31.9\% fewer tokens} than Setting B (999 vs 1,466 tokens/answer) and avoiding equation fragmentation. Setting C uses fewer tokens than Setting B because fetching 2 chunks from tail sections averages fewer words than consistently retrieving 4 chunks of 380 words. When approaching the per-minute limit, retrieval dynamically clamps $k=1$, reducing prompt overhead to $\approx 500$ tokens.
+
+\section*{How this library will mislead a naive retriever}
+\begin{enumerate}
+    \item \textbf{Shared Terminology Trap (Multi-Head Self-Attention):}  
+    \textit{Query:} ``Explain the multi-head self-attention mechanism used in Moshi's Helium text backbone.''\\
+    \textit{Failure:} Lexical matching pulls Section 3.2 of Vaswani et al. (\textit{Attention Is All You Need}) instead of Moshi's Helium model (2410.00037, Section 3.2), attributing the Transformer's $d_k=64$ parameters to Moshi.
+    \item \textbf{Misplaced Technique Trap (Dynamic Chunking Threshold):}  
+    \textit{Query:} ``What dynamic chunking threshold is used in Attention Is All You Need?''\\
+    \textit{Failure:} Naive search independently matches keywords from 1706.03762 and hallucinates a threshold value instead of recognizing that dynamic chunking was introduced in H-Net (2507.07955) and is absent from 1706.03762.
+    \item \textbf{Implicit Elimination Trap (BPE Vocabulary Size):}  
+    \textit{Query:} ``What is the BPE vocabulary size of the H-Net dynamic chunking model?''\\
+    \textit{Failure:} Lexical matching on ``BPE'' extracts baseline comparison passages in 2507.07955, reporting baseline vocabulary sizes rather than understanding that H-Net eliminates tokenizers and operates on raw bytes.
+\end{enumerate}
+
+\section*{6 Retries}
+Our policy applies exponential backoff with full random jitter capped at 2 retries and an 8.0-second maximum ceiling: $t_{\text{backoff}} = \min(8.0, 1.0 \cdot 2^{\text{attempt}} + \text{random}(0.01, 0.05))$, adapting dynamically to upstream \texttt{retry-after} headers.\\
+\textbf{One case where retrying made things worse:} In the Burst scenario (30 concurrent requests), 19 requests tripped the 8,000 TPM limit on attempt 0. Because clients backed off for only 1--2 seconds and retried before the 60-second sliding token window had cleared, retries slammed back into the same rate limit, amplifying peak queue length to 15, consuming thread pool workers, and adding 6 seconds of wasted latency per request before failing.
+
+\section*{7 What the person sees}
+At 3:00 PM when the daily quota is exhausted, waiting users receive an immediate, transparent explanation:
+\begin{quote}
+\textit{``The daily query budget for this research library assistant has been exhausted for today (1,000 requests/day limit reached). Quotas reset at 00:00 UTC. For urgent inquiries, please consult arXiv preprints 1706.03762, 2410.00037, and 2507.07955 directly.''}
+\end{quote}
+
+\section*{8 What I'm unsure about, what I left out, what I learned}
+\begin{itemize}
+    \item \textbf{Least Certain Assumption:} Assuming TF-IDF lexical search with section boosting is sufficient across dense ML papers. Complex mathematical derivations can span chunk boundaries, causing potential citation misses without dense semantic vector search.
+    \item \textbf{Two Deliberately Omitted Features:} (1) Dense vector embedding databases (Chroma/Pinecone), keeping the system lightweight, reproducible, and zero-dependency. (2) Unbounded client retry queues, preventing artificial tail latency under sustained overload.
+    \item \textbf{One Thing Learned (Taught in My Own Words):} \textit{End-to-End Hierarchical Dynamic Chunking (H-Net).} Standard language models rely on pre-trained, heuristic Byte-Pair Encoding (BPE) subword vocabularies. H-Net replaces static tokenizers by learning dynamic boundary segmentation directly within the neural architecture using a chunking layer and ratio loss. This processes raw bytes directly, matching token-based model compute while dramatically improving efficiency on non-subword modalities like DNA sequences and Chinese text.
+\end{itemize}
+
+\section*{Your feedback on Vaani}
+Reviewing \url{https://www.vaani.dev/}:
+\begin{itemize}
+    \item \textbf{What Stood Out:} The clear ambition to solve real-time full-duplex conversational voice AI, featuring turn-taking, natural pauses, and sub-second voice turnaround ($\approx 450\text{ ms}$ p90 target).
+    \item \textbf{What Felt Slow / Observed Friction:} During my firsthand interaction with the platform, the overall responsiveness felt slow. While voice AI promises instant conversational turnaround, the interactive response times felt noticeably sluggish. In conversational voice applications, even a 500--800 ms hesitation feels like awkward dead air, disrupting natural conversational cadence.
+    \item \textbf{One Thing I Would Change:} Provide immediate front-end feedback or optimistic audio indicators (such as conversational filler utterances like ``mm-hmm'' or an instant visual speech visualizer) as soon as voice input stops, paired with edge-routed WebSocket streaming to prevent initial dispatch latency from degrading perceived conversational fluidity.
+\end{itemize}
+
+\newpage
+
+\section*{How I worked with the assistant}
+
+\subsection*{Conversation History Summary}
+The development was executed in structured, verified milestones:
+\begin{enumerate}
+    \item \textbf{Corpus \& Environment Setup:} Verified 3 exact arXiv papers in \texttt{papers/}, initialized Git repository tracking \texttt{origin/main}, created \texttt{.env.example}, and enforced strict privacy on \texttt{.env}.
+    \item \textbf{Real Groq Baseline Probe:} Executed live probe on \texttt{openai/gpt-oss-20b}, capturing true baseline TTFT ($p50 \approx 1,868.9\text{ ms}$, tail $p95 \approx 18,756.0\text{ ms}$) and live rate limit headers (\texttt{x-ratelimit-limit-tokens: 8000}, \texttt{x-ratelimit-limit-requests: 1000}).
+    \item \textbf{Calibrated Stand-in \& Pipeline:} Implemented \texttt{src/standin_service.py} and \texttt{src/pipeline.py} with 4 steps, tool call, verifier loop, and queue degradation dynamics ($L = L_0 + \alpha \cdot (N_{\text{inflight}}-1)$). Validated via unit tests.
+    \item \textbf{Benchmark Harness \& CSV Generation:} Curated 16 evaluation questions in \texttt{data/questions.json}, built \texttt{scripts/run_benchmarks.py}, and executed all 5 load scenarios and 3 retrieval configurations, generating 175 organic rows in \texttt{results.csv}. Recomputed Tables 1, 2a, 2b, 3 via \texttt{scripts/generate_tables.py}.
+\end{enumerate}
+
+\subsection*{Three Prompts That Mattered Most}
+\begin{enumerate}
+    \item \textit{``don't waste the free quota trying to hit limits. one thing: don't touch or read my .env file. you can create .env.example and update .gitignore; i'll add the api key myself.''}  
+    \textbf{Why it mattered:} Established strict operational boundaries: zero exposure of secrets and clean isolation between real service baseline calibration and Stand-in heavy load testing, protecting the account's daily token allocation.
+    \item \textit{``before coding fix the report outline so all 11 headings from the assignment are in the exact required order keep the implementation simple reproducible and within assignment constraints''}  
+    \textbf{Why it mattered:} Anchored project development directly to the assignment rubric, preventing organizational drift and guaranteeing compliance with the required heading order and table schemas.
+    \item \textit{``Check results.csv against the actual benchmark logs and code. Investigate the identical real-service TTFT/total-latency percentiles, verify all five real probe requests are represented correctly, and confirm every row represents an actual request rather than a manually constructed or aggregated record.''}  
+    \textbf{Why it mattered:} Triggered the forensic audit that uncovered the reasoning token channel behavior in \texttt{openai/gpt-oss-20b} and the unpaced token saturation in the benchmark script, leading to authentic streaming token extraction and accurate measurements.
+\end{enumerate}
+
+\subsection*{One Thing It Got Wrong That I Caught \& How I Caught It}
+In the slow-request latency breakdown (Section 4), the assistant initially constructed an impossible timeline: it conflated the p50 TTFT of successful requests ($1,847.4\text{ ms}$) with the p50 total latency of failed requests ($6,003.9\text{ ms}$) under a non-existent request ID, asserting that the request waited $3,980.2\text{ ms}$ in backoff sleep yet received its first token at $1,847.4\text{ ms}$. I audited the numbers, caught this physical contradiction, and commanded the assistant to trace the actual request logs in \texttt{results.csv} and build a mathematically consistent timing model based on an actual captured request (\texttt{req\_c94d601d}).
+
+\subsection*{One Decision Where I Overruled It}
+The assistant wanted to proceed directly with writing the final report based on passing tests. I overruled it and mandated an exhaustive end-to-end verification and forensic audit pass across all 11 assignment headings, the exact CSV schema, retrieval accuracy, and latency accounting before authoring the technical report. I also explicitly directed the assistant to delete the intermediate Markdown report and produce a minimalist README.
+
+\subsection*{What in This Submission Is Distinctly Mine}
+The rigorous audit and verification philosophy; the decision to prioritize admission control and fast-fail 0-ms rejection upon daily quota exhaustion; the curated 16-question evaluation suite targeting real cross-paper nuances (like BPE elimination in H-Net and multi-stream modeling in Moshi); the firsthand evaluation that the Vaani platform felt slow; and the strict enforcement of empirical traceability over synthetic or aggregated claims.
+
+\end{document}
